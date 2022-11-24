@@ -20,6 +20,7 @@ name = "rfb"
 path = "src/main.rs"
 
 [dependencies]
+
 # error dependencies
 paris = "1.5"
 thiserror = "1.0"
@@ -45,7 +46,15 @@ tracing-bunyan-formatter = "0.3"
 tracing-appender = "0.2"
 
 # etl/dataframe dependencies
-polars = "0.24"
+polars = "0.25"
+
+#database
+postgres = "0.19.4"
+postgres-openssl = "0.5.0"
+diesel = { version = "2.0", features = ["r2d2", "serde_json", "numeric", "large-tables"] }
+diesel-derive-enum = { version = "1.1", features = ["postgres"] }
+diesel_migrations = { version = "2.0", features = ["postgres"] }
+diesel-dynamic-schema = { version = "0.2", features = ["postgres"] }
 
 # cli/utilities dependencies
 clap = { version = "4.0", features = ["derive", "cargo"] }
@@ -70,31 +79,25 @@ requestty = "0.5"
 slog = "2.7.0"
 slog-term = "2.9.0"
 slog-syslog = "0.13.0"
-diesel = { version = "2.0.2", features = ["r2d2", "serde_json", "numeric", "large-tables"] }
-diesel-derive-enum = { version = "1.1.2", features = ["postgres"] }
 blake3 = "1.3.1"
-diesel_migrations = { version = "2.0.0", features = ["postgres"] }
-derive_more = "0.99.17"
+derive_more = "0.99"
 async-trait = "0.1.58"
-diesel-dynamic-schema = { version = "0.2.0", features = ["postgres"] }
-inflector-plus = "0.11.7"
-lazy_static = "1.4.0"
-postgres = "0.19.4"
-postgres-openssl = "0.5.0"
-openssl = "0.10.42"
+inflector-plus = "0.11"
+lazy_static = "1.4"
+openssl = "0.10"
 uuid = { version = "1.2.1", features = ["v4", "v8", "serde", "rand"] }
-anyhow = "1.0.66"
-git-testament = "0.2.1"
-itertools = "0.10.5"
-semver = "1.0.14"
-indexmap = "1.9.1"
-generic-array = "0.14.6"
-either = "1.8.0"
-tinyvec = { version = "1.6.0", features = ["std"] }
-cargo-udeps = "0.1.34"
-cargo-sort = "1.0.9"
-serde_json = "1.0.87"
-humansize = "2.1.0"
+anyhow = "1.0"
+git-testament = "0.2"
+itertools = "0.10"
+semver = "1.0"
+indexmap = "1.9"
+generic-array = "0.14"
+either = "1.8"
+tinyvec = { version = "1.6", features = ["std"] }
+cargo-udeps = "0.1"
+cargo-sort = "1.0"
+serde_json = "1.0"
+humansize = "2.1"
 
 [profile.release]
 codegen-units = 1
