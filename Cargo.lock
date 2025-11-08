@@ -3891,6 +3891,7 @@ dependencies = [
  "slog",
  "slog-syslog",
  "slog-term",
+ "tempfile",
  "term_size",
  "thiserror",
  "tinyvec",
