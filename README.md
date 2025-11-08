@@ -193,6 +193,14 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 - [minha-receita](https://github.com/cuducos/minha-receita) - Original Go implementation
 - [brasil.io](https://brasil.io/dataset/socios-brasil/) - Similar data access service
 
+## 📖 Additional Documentation
+
+- [CI_CD.md](CI_CD.md) - Complete CI/CD pipeline documentation
+- [QUICK_START.md](QUICK_START.md) - Quick start guide for development and deployment
+- [DEVELOPMENT.md](DEVELOPMENT.md) - Developer guide
+- [IMPLEMENTATION.md](IMPLEMENTATION.md) - Architecture comparison with minha-receita
+- [CHANGELOG.md](CHANGELOG.md) - Version history
+
 ## ⚠️ Disclaimer
 
 This project is not officially affiliated with the Brazilian Federal Revenue. The data is publicly available and provided by the government.
