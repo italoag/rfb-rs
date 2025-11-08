@@ -29,6 +29,7 @@ thiserror = "1.0"
 futures = "0.3"
 actix-rt = "2.7"
 tokio = { version = "1", features = ["full"] }
+actix-web = "4.4"
 
 # http
 http = "0.2"
@@ -56,10 +57,10 @@ walkdir = "2"
 #database
 postgres = "0.19.4"
 postgres-openssl = "0.5.0"
-diesel = { version = "2.0", features = ["r2d2", "serde_json", "numeric", "large-tables"] }
-diesel-derive-enum = { version = "1.1", features = ["postgres"] }
-diesel_migrations = { version = "2.0", features = ["postgres"] }
-diesel-dynamic-schema = { version = "0.2", features = ["postgres"] }
+diesel = { version = "2.1", features = ["postgres", "r2d2", "serde_json", "numeric"] }
+diesel-derive-enum = { version = "2.1", features = ["postgres"] }
+diesel_migrations = { version = "2.1", features = ["postgres"] }
+chrono = { version = "0.4", features = ["serde"] }
 
 # cli/utilities dependencies
 clap = { version = "4.0", features = ["derive", "cargo"] }

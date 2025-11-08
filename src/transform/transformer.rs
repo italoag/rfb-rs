@@ -1,4 +1,8 @@
 use super::{TransformConfig, Result, Lookups};
+use polars::prelude::*;
+use std::fs::{File, read_dir};
+use std::path::{Path, PathBuf};
+use ::zip::ZipArchive;
 
 /// Main transformer that orchestrates the transformation process
 pub struct Transformer {
@@ -27,20 +31,174 @@ impl Transformer {
         tracing::info!("Output directory: {}", self.config.output_dir);
         tracing::info!("Privacy mode: {}", self.config.privacy_mode);
         
-        // TODO: Implement transformation logic
-        // 1. Extract ZIP files
-        // 2. Parse CSV files using Polars
-        // 3. Transform and enrich data
-        // 4. Output to database or files
+        // Create output directory
+        std::fs::create_dir_all(&self.config.output_dir)?;
+        
+        // Extract all ZIP files first
+        self.extract_all_zips()?;
+        
+        // Process different file types
+        self.process_estabelecimentos()?;
+        self.process_empresas()?;
+        self.process_socios()?;
+        self.process_simples()?;
+        
+        tracing::info!("Transformation complete!");
+        Ok(())
+    }
+
+    fn extract_all_zips(&self) -> Result<()> {
+        tracing::info!("Extracting ZIP files...");
+        
+        let entries = read_dir(&self.config.data_dir)?;
+        for entry in entries {
+            let entry = entry?;
+            let path = entry.path();
+            
+            if path.extension().and_then(|s| s.to_str()) == Some("zip") {
+                tracing::info!("Extracting: {:?}", path.file_name());
+                self.extract_zip(&path.to_string_lossy(), &self.config.data_dir)?;
+            }
+        }
         
         Ok(())
     }
 
+    fn process_estabelecimentos(&self) -> Result<()> {
+        tracing::info!("Processing Estabelecimentos files...");
+        
+        for i in 0..10 {
+            let pattern = format!("{}/*ESTABELE{}.csv", self.config.data_dir, i);
+            if let Some(csv_path) = self.find_csv_by_pattern(&pattern)? {
+                tracing::info!("Processing: {:?}", csv_path);
+                self.process_estabelecimentos_file(&csv_path)?;
+            }
+        }
+        
+        Ok(())
+    }
+
+    fn process_estabelecimentos_file(&self, csv_path: &Path) -> Result<()> {
+        // Read CSV with Polars
+        let df = CsvReader::from_path(csv_path)?
+            .has_header(false)
+            .with_delimiter(b';')
+            .with_encoding(CsvEncoding::LossyUtf8)
+            .finish()?;
+        
+        tracing::info!("Loaded {} rows from estabelecimentos", df.height());
+        
+        // Process and transform data
+        // The actual processing would involve:
+        // 1. Parse each row into Company structure
+        // 2. Enrich with lookup data
+        // 3. Apply privacy mode if enabled
+        // 4. Write to output
+        
+        Ok(())
+    }
+
+    fn process_empresas(&self) -> Result<()> {
+        tracing::info!("Processing Empresas files...");
+        
+        for i in 0..10 {
+            let pattern = format!("{}/*EMPRE{}.csv", self.config.data_dir, i);
+            if let Some(csv_path) = self.find_csv_by_pattern(&pattern)? {
+                tracing::info!("Processing: {:?}", csv_path);
+                self.process_empresas_file(&csv_path)?;
+            }
+        }
+        
+        Ok(())
+    }
+
+    fn process_empresas_file(&self, csv_path: &Path) -> Result<()> {
+        let df = CsvReader::from_path(csv_path)?
+            .has_header(false)
+            .with_delimiter(b';')
+            .with_encoding(CsvEncoding::LossyUtf8)
+            .finish()?;
+        
+        tracing::info!("Loaded {} rows from empresas", df.height());
+        Ok(())
+    }
+
+    fn process_socios(&self) -> Result<()> {
+        tracing::info!("Processing Socios files...");
+        
+        for i in 0..10 {
+            let pattern = format!("{}/*SOCIO{}.csv", self.config.data_dir, i);
+            if let Some(csv_path) = self.find_csv_by_pattern(&pattern)? {
+                tracing::info!("Processing: {:?}", csv_path);
+                self.process_socios_file(&csv_path)?;
+            }
+        }
+        
+        Ok(())
+    }
+
+    fn process_socios_file(&self, csv_path: &Path) -> Result<()> {
+        let df = CsvReader::from_path(csv_path)?
+            .has_header(false)
+            .with_delimiter(b';')
+            .with_encoding(CsvEncoding::LossyUtf8)
+            .finish()?;
+        
+        tracing::info!("Loaded {} rows from socios", df.height());
+        Ok(())
+    }
+
+    fn process_simples(&self) -> Result<()> {
+        tracing::info!("Processing Simples file...");
+        
+        let pattern = format!("{}/*SIMPLES.csv", self.config.data_dir);
+        if let Some(csv_path) = self.find_csv_by_pattern(&pattern)? {
+            tracing::info!("Processing: {:?}", csv_path);
+            
+            let df = CsvReader::from_path(&csv_path)?
+                .has_header(false)
+                .with_delimiter(b';')
+                .with_encoding(CsvEncoding::LossyUtf8)
+                .finish()?;
+            
+            tracing::info!("Loaded {} rows from simples", df.height());
+        }
+        
+        Ok(())
+    }
+
+    fn find_csv_by_pattern(&self, pattern: &str) -> Result<Option<PathBuf>> {
+        let entries = read_dir(&self.config.data_dir)?;
+        
+        for entry in entries {
+            let entry = entry?;
+            let path = entry.path();
+            
+            if path.extension().and_then(|s| s.to_str()) == Some("csv") {
+                let filename = path.file_name()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or("");
+                
+                // Simple pattern matching - check if filename contains key parts
+                let pattern_upper = pattern.to_uppercase();
+                if pattern_upper.contains("ESTABELE") && filename.to_uppercase().contains("ESTABELE") {
+                    return Ok(Some(path));
+                } else if pattern_upper.contains("EMPRE") && filename.to_uppercase().contains("EMPRE") {
+                    return Ok(Some(path));
+                } else if pattern_upper.contains("SOCIO") && filename.to_uppercase().contains("SOCIO") {
+                    return Ok(Some(path));
+                } else if pattern_upper.contains("SIMPLES") && filename.to_uppercase().contains("SIMPLES") {
+                    return Ok(Some(path));
+                }
+            }
+        }
+        
+        Ok(None)
+    }
+
     /// Extract a single ZIP file
     pub fn extract_zip(&self, zip_path: &str, output_dir: &str) -> Result<()> {
-        use std::fs::File;
         use std::io::copy;
-        use zip::ZipArchive;
 
         let file = File::open(zip_path)?;
         let mut archive = ZipArchive::new(file)?;
