@@ -8,7 +8,7 @@ fn test_federal_revenue_urls() {
     
     // Check that all URLs start with the correct base
     for url in &urls {
-        assert!(url.starts_with("https://dadosabertos.rfb.gov.br/CNPJ/"));
+        assert!(url.starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
     }
     
     // Check specific file types exist
@@ -38,7 +38,7 @@ fn test_transform_config_default() {
 
 #[test]
 fn test_filename_extraction() {
-    let url = "https://dadosabertos.rfb.gov.br/CNPJ/Estabelecimentos0.zip";
+    let url = "https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/2025-11/Estabelecimentos0.zip";
     let filename = FederalRevenue::filename_from_url(url);
     assert_eq!(filename, Some("Estabelecimentos0.zip".to_string()));
 }
