@@ -1,3 +1,8 @@
 /target
 /.idea/
 /polars-study.iml
+/data
+/output
+*.zip
+*.csv
+Cargo.lock
