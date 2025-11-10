@@ -71,15 +71,18 @@ impl Lookups {
     }
 
     fn load_countries(&mut self, path: &Path) -> super::Result<()> {
-        let df = CsvReader::from_path(path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(path.into()))?
             .finish()?;
         
         if df.width() >= 2 {
             let codes = df.column("column_1")?.i32()?;
-            let names = df.column("column_2")?.utf8()?;
+            let names = df.column("column_2")?.str()?;
             
             for (code_opt, name_opt) in codes.into_iter().zip(names.into_iter()) {
                 if let (Some(code), Some(name)) = (code_opt, name_opt) {
@@ -92,15 +95,18 @@ impl Lookups {
     }
 
     fn load_cities(&mut self, path: &Path) -> super::Result<()> {
-        let df = CsvReader::from_path(path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(path.into()))?
             .finish()?;
         
         if df.width() >= 2 {
             let codes = df.column("column_1")?.i32()?;
-            let names = df.column("column_2")?.utf8()?;
+            let names = df.column("column_2")?.str()?;
             
             for (code_opt, name_opt) in codes.into_iter().zip(names.into_iter()) {
                 if let (Some(code), Some(name)) = (code_opt, name_opt) {
@@ -113,15 +119,18 @@ impl Lookups {
     }
 
     fn load_legal_natures(&mut self, path: &Path) -> super::Result<()> {
-        let df = CsvReader::from_path(path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(path.into()))?
             .finish()?;
         
         if df.width() >= 2 {
             let codes = df.column("column_1")?.i32()?;
-            let names = df.column("column_2")?.utf8()?;
+            let names = df.column("column_2")?.str()?;
             
             for (code_opt, name_opt) in codes.into_iter().zip(names.into_iter()) {
                 if let (Some(code), Some(name)) = (code_opt, name_opt) {
@@ -134,15 +143,18 @@ impl Lookups {
     }
 
     fn load_qualifications(&mut self, path: &Path) -> super::Result<()> {
-        let df = CsvReader::from_path(path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(path.into()))?
             .finish()?;
         
         if df.width() >= 2 {
             let codes = df.column("column_1")?.i32()?;
-            let names = df.column("column_2")?.utf8()?;
+            let names = df.column("column_2")?.str()?;
             
             for (code_opt, name_opt) in codes.into_iter().zip(names.into_iter()) {
                 if let (Some(code), Some(name)) = (code_opt, name_opt) {
@@ -155,15 +167,18 @@ impl Lookups {
     }
 
     fn load_cnaes(&mut self, path: &Path) -> super::Result<()> {
-        let df = CsvReader::from_path(path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(path.into()))?
             .finish()?;
         
         if df.width() >= 2 {
             let codes = df.column("column_1")?.i32()?;
-            let names = df.column("column_2")?.utf8()?;
+            let names = df.column("column_2")?.str()?;
             
             for (code_opt, name_opt) in codes.into_iter().zip(names.into_iter()) {
                 if let (Some(code), Some(name)) = (code_opt, name_opt) {
@@ -176,15 +191,18 @@ impl Lookups {
     }
 
     fn load_motives(&mut self, path: &Path) -> super::Result<()> {
-        let df = CsvReader::from_path(path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(path.into()))?
             .finish()?;
         
         if df.width() >= 2 {
             let codes = df.column("column_1")?.i32()?;
-            let names = df.column("column_2")?.utf8()?;
+            let names = df.column("column_2")?.str()?;
             
             for (code_opt, name_opt) in codes.into_iter().zip(names.into_iter()) {
                 if let (Some(code), Some(name)) = (code_opt, name_opt) {

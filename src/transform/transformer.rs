@@ -80,10 +80,13 @@ impl Transformer {
 
     fn process_estabelecimentos_file(&self, csv_path: &Path) -> Result<()> {
         // Read CSV with Polars
-        let df = CsvReader::from_path(csv_path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(csv_path.into()))?
             .finish()?;
         
         tracing::info!("Loaded {} rows from estabelecimentos", df.height());
@@ -113,10 +116,13 @@ impl Transformer {
     }
 
     fn process_empresas_file(&self, csv_path: &Path) -> Result<()> {
-        let df = CsvReader::from_path(csv_path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(csv_path.into()))?
             .finish()?;
         
         tracing::info!("Loaded {} rows from empresas", df.height());
@@ -138,10 +144,13 @@ impl Transformer {
     }
 
     fn process_socios_file(&self, csv_path: &Path) -> Result<()> {
-        let df = CsvReader::from_path(csv_path)?
-            .has_header(false)
-            .with_delimiter(b';')
-            .with_encoding(CsvEncoding::LossyUtf8)
+        let df = CsvReadOptions::default()
+            .with_has_header(false)
+            .with_parse_options(
+                CsvParseOptions::default()
+                    .with_separator(b';')
+            )
+            .try_into_reader_with_file_path(Some(csv_path.into()))?
             .finish()?;
         
         tracing::info!("Loaded {} rows from socios", df.height());
@@ -155,10 +164,13 @@ impl Transformer {
         if let Some(csv_path) = self.find_csv_by_pattern(&pattern)? {
             tracing::info!("Processing: {:?}", csv_path);
             
-            let df = CsvReader::from_path(&csv_path)?
-                .has_header(false)
-                .with_delimiter(b';')
-                .with_encoding(CsvEncoding::LossyUtf8)
+            let df = CsvReadOptions::default()
+                .with_has_header(false)
+                .with_parse_options(
+                    CsvParseOptions::default()
+                        .with_separator(b';')
+                )
+                .try_into_reader_with_file_path(Some(csv_path.as_path().into()))?
                 .finish()?;
             
             tracing::info!("Loaded {} rows from simples", df.height());

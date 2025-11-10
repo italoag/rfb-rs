@@ -135,7 +135,7 @@ async fn test_zip_extraction() {
     let file = fs::File::create(&zip_path).unwrap();
     let mut zip = zip::ZipWriter::new(file);
     
-    zip.start_file("test.txt", zip::write::FileOptions::default()).unwrap();
+    zip.start_file::<&str, ()>("test.txt", zip::write::FileOptions::default()).unwrap();
     std::io::Write::write_all(&mut zip, b"test content").unwrap();
     zip.finish().unwrap();
     
