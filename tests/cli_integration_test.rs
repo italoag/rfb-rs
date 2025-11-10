@@ -135,8 +135,11 @@ fn test_download_invalid_parallel() {
         .arg("--directory")
         .arg(temp_dir.path().to_str().unwrap())
         .arg("--parallel")
-        .arg("0");
+        .arg("0")
+        .timeout(std::time::Duration::from_secs(5));
     
-    // Parallel 0 is invalid
-    cmd.assert().failure();
+    // Parallel 0 is invalid and should fail immediately with error message
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains("parallel"));
 }

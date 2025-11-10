@@ -27,6 +27,9 @@ pub enum DownloadError {
     
     #[error("Invalid URL: {0}")]
     InvalidUrl(String),
+    
+    #[error("Invalid configuration: {0}")]
+    InvalidConfig(String),
 }
 
 pub type Result<T> = std::result::Result<T, DownloadError>;
@@ -46,6 +49,19 @@ pub struct DownloadConfig {
     pub chunk_size: i64,
     pub skip_existing: bool,
     pub restart: bool,
+}
+
+impl DownloadConfig {
+    /// Validate the configuration
+    pub fn validate(&self) -> Result<()> {
+        if self.max_parallel == 0 {
+            return Err(DownloadError::InvalidConfig("max_parallel must be at least 1".to_string()));
+        }
+        if self.max_retries == 0 {
+            return Err(DownloadError::InvalidConfig("max_retries must be at least 1".to_string()));
+        }
+        Ok(())
+    }
 }
 
 impl Default for DownloadConfig {

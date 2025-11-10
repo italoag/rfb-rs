@@ -47,7 +47,7 @@ async fn test_api_server_startup() {
         database_url: std::env::var("DATABASE_URL").unwrap_or("postgres://localhost/rfb_test".to_string()),
     };
     
-    let server = ApiServer::new(config);
+    let _server = ApiServer::new(config);
     
     // This would start the server - in real tests, we'd spawn it in a separate task
     // and make HTTP requests to it

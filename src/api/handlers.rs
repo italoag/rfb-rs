@@ -136,7 +136,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_health_check() {
-        let response = health_check().await;
+        let _response = health_check().await;
         // Response is an impl Responder, can't directly test here
         // In integration tests, we would test the actual HTTP response
     }
