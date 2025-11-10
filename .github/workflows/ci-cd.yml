@@ -223,12 +223,12 @@ jobs:
       - name: Install semantic-release
         run: |
           npm install -g \
-            semantic-release \
-            @semantic-release/changelog \
-            @semantic-release/git \
-            @semantic-release/github \
-            @semantic-release/exec \
-            conventional-changelog-conventionalcommits
+            semantic-release@21.0.0 \
+            @semantic-release/changelog@6.0.3 \
+            @semantic-release/git@10.0.1 \
+            @semantic-release/github@9.0.6 \
+            @semantic-release/exec@6.0.3 \
+            conventional-changelog-conventionalcommits@7.0.2
 
       - name: Download all artifacts
         uses: actions/download-artifact@v3

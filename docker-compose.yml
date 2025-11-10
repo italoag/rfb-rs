@@ -7,6 +7,7 @@ services:
     environment:
       POSTGRES_DB: rfb
       POSTGRES_USER: rfb
+      # WARNING: Development credentials only - use environment variables or secrets in production
       POSTGRES_PASSWORD: rfb_password
     ports:
       - "5432:5432"
@@ -24,6 +25,7 @@ services:
       dockerfile: Dockerfile
     container_name: rfb-api
     environment:
+      # WARNING: Development credentials only - use environment variables or secrets in production
       DATABASE_URL: postgres://rfb:rfb_password@postgres:5432/rfb
       POSTGRES_SCHEMA: public
       RUST_LOG: info
@@ -43,6 +45,7 @@ services:
       dockerfile: Dockerfile
     container_name: rfb-init
     environment:
+      # WARNING: Development credentials only - use environment variables or secrets in production
       DATABASE_URL: postgres://rfb:rfb_password@postgres:5432/rfb
       POSTGRES_SCHEMA: public
     volumes:

@@ -1,4 +1,11 @@
 use serde::{Deserialize, Serialize};
+use lazy_static::lazy_static;
+use regex::Regex;
+
+lazy_static! {
+    /// Regex for matching CPF pattern in MEI names: (\D)(\d{3})(\d{5})(\d{3})
+    static ref CPF_REGEX: Regex = Regex::new(r"(\D)(\d{3})(\d{5})(\d{3})$").unwrap();
+}
 
 /// Company data structure matching the Federal Revenue format
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -74,11 +81,8 @@ impl Company {
     
     /// Clean company name for privacy (masks CPF in MEI names)
     pub fn clean_name(name: &str) -> String {
-        // Regex to match CPF pattern in name: (\D)(\d{3})(\d{5})(\d{3})
         // Replace middle digits with ***
-        use regex::Regex;
-        let re = Regex::new(r"(\D)(\d{3})(\d{5})(\d{3})$").unwrap();
-        re.replace(name, "$1***$3***").trim().to_string()
+        CPF_REGEX.replace(name, "$1***$3***").trim().to_string()
     }
 }
 

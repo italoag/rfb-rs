@@ -4,6 +4,9 @@ use actix_web::{web, HttpResponse, Responder};
 use serde_json::json;
 use postgres::{Client, NoTls};
 
+/// Prometheus exposition format version
+const PROMETHEUS_CONTENT_TYPE: &str = "text/plain; version=0.0.4";
+
 /// Handler for getting company by CNPJ
 pub async fn get_company_handler(
     cnpj: web::Path<String>,
@@ -126,7 +129,7 @@ pub async fn metrics() -> impl Responder {
     );
     
     HttpResponse::Ok()
-        .content_type("text/plain; version=0.0.4")
+        .content_type(PROMETHEUS_CONTENT_TYPE)
         .body(metrics_text)
 }
 

@@ -8,6 +8,9 @@ use std::time::Duration;
 use futures::stream::{self, StreamExt};
 use tokio::time::sleep;
 
+/// Maximum exponent for exponential backoff retry delay (2^5 = 32 seconds)
+const MAX_BACKOFF_EXPONENT: u32 = 5;
+
 /// Main downloader that orchestrates the download process
 pub struct Downloader {
     config: DownloadConfig,
@@ -173,7 +176,7 @@ async fn download_chunked(
                         return Err(super::DownloadError::MaxRetriesExceeded(retries));
                     }
                     tracing::warn!("Retry {}/{} for chunk: {}", retries, config.max_retries, e);
-                    sleep(Duration::from_secs(2u64.pow(retries.min(5)))).await;
+                    sleep(Duration::from_secs(2u64.pow(retries.min(MAX_BACKOFF_EXPONENT)))).await;
                 }
             }
         };
@@ -200,8 +203,10 @@ async fn download_chunk(
         .await?;
     
     if !response.status().is_success() {
+        let status = response.status();
         return Err(super::DownloadError::HttpError(
-            reqwest::Error::from(response.error_for_status().unwrap_err())
+            response.error_for_status()
+                .expect_err(&format!("Expected error status but got success for status {}", status))
         ));
     }
     
@@ -218,8 +223,10 @@ async fn download_simple(
     let response = client.get(url).send().await?;
     
     if !response.status().is_success() {
+        let status = response.status();
         return Err(super::DownloadError::HttpError(
-            reqwest::Error::from(response.error_for_status().unwrap_err())
+            response.error_for_status()
+                .expect_err(&format!("Expected error status but got success for status {}", status))
         ));
     }
     
