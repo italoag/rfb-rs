@@ -1,4 +1,4 @@
-use super::{Database, Result, DatabaseError};
+use super::{Database, DatabaseError, Result};
 use postgres::{Client, NoTls};
 
 /// PostgreSQL database implementation
@@ -19,7 +19,7 @@ impl PostgresDatabase {
         let connection_string = std::env::var("DATABASE_URL")
             .map_err(|_| DatabaseError::ConnectionError("DATABASE_URL not set".to_string()))?;
         let schema = std::env::var("POSTGRES_SCHEMA").unwrap_or_else(|_| "public".to_string());
-        
+
         Ok(Self::new(connection_string, schema))
     }
 
@@ -32,16 +32,18 @@ impl PostgresDatabase {
 impl Database for PostgresDatabase {
     fn create(&self) -> Result<()> {
         tracing::info!("Creating database schema: {}", self.schema);
-        
+
         let mut client = self.get_client()?;
-        
+
         // Set schema
-        client.execute(&format!("SET search_path TO {}", self.schema), &[])
+        client
+            .execute(&format!("SET search_path TO {}", self.schema), &[])
             .map_err(|e| DatabaseError::QueryError(e.to_string()))?;
-        
+
         // Create companies table
-        client.execute(
-            "CREATE TABLE IF NOT EXISTS companies (
+        client
+            .execute(
+                "CREATE TABLE IF NOT EXISTS companies (
                 cnpj VARCHAR(14) PRIMARY KEY,
                 identificador_matriz_filial INTEGER,
                 descricao_identificador_matriz_filial VARCHAR(50),
@@ -88,12 +90,14 @@ impl Database for PostgresDatabase {
                 porte VARCHAR(50),
                 ente_federativo_responsavel TEXT
             )",
-            &[],
-        ).map_err(|e| DatabaseError::QueryError(e.to_string()))?;
-        
+                &[],
+            )
+            .map_err(|e| DatabaseError::QueryError(e.to_string()))?;
+
         // Create partners table
-        client.execute(
-            "CREATE TABLE IF NOT EXISTS partners (
+        client
+            .execute(
+                "CREATE TABLE IF NOT EXISTS partners (
                 id SERIAL PRIMARY KEY,
                 cnpj VARCHAR(14) NOT NULL,
                 identificador_socio INTEGER,
@@ -111,9 +115,10 @@ impl Database for PostgresDatabase {
                 codigo_faixa_etaria INTEGER,
                 faixa_etaria VARCHAR(50)
             )",
-            &[],
-        ).map_err(|e| DatabaseError::QueryError(e.to_string()))?;
-        
+                &[],
+            )
+            .map_err(|e| DatabaseError::QueryError(e.to_string()))?;
+
         // Create indexes
         let indexes = vec![
             "CREATE INDEX IF NOT EXISTS idx_companies_cnpj ON companies(cnpj)",
@@ -125,32 +130,36 @@ impl Database for PostgresDatabase {
             "CREATE INDEX IF NOT EXISTS idx_partners_cnpj ON partners(cnpj)",
             "CREATE INDEX IF NOT EXISTS idx_partners_nome ON partners(nome_socio)",
         ];
-        
+
         for idx_sql in indexes {
-            client.execute(idx_sql, &[])
+            client
+                .execute(idx_sql, &[])
                 .map_err(|e| DatabaseError::QueryError(e.to_string()))?;
         }
-        
+
         tracing::info!("Database tables and indexes created successfully");
         Ok(())
     }
 
     fn drop(&self) -> Result<()> {
         tracing::info!("Dropping database schema: {}", self.schema);
-        
+
         let mut client = self.get_client()?;
-        
+
         // Set schema
-        client.execute(&format!("SET search_path TO {}", self.schema), &[])
+        client
+            .execute(&format!("SET search_path TO {}", self.schema), &[])
             .map_err(|e| DatabaseError::QueryError(e.to_string()))?;
-        
+
         // Drop tables
-        client.execute("DROP TABLE IF EXISTS partners CASCADE", &[])
+        client
+            .execute("DROP TABLE IF EXISTS partners CASCADE", &[])
             .map_err(|e| DatabaseError::QueryError(e.to_string()))?;
-        
-        client.execute("DROP TABLE IF EXISTS companies CASCADE", &[])
+
+        client
+            .execute("DROP TABLE IF EXISTS companies CASCADE", &[])
             .map_err(|e| DatabaseError::QueryError(e.to_string()))?;
-        
+
         tracing::info!("Database tables dropped successfully");
         Ok(())
     }

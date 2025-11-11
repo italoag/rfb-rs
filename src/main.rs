@@ -123,7 +123,7 @@ async fn main() -> anyhow::Result<()> {
                 eprintln!("Error: parallel downloads must be at least 1");
                 std::process::exit(1);
             }
-            
+
             let config = rfb_rs::download::DownloadConfig {
                 data_dir: directory,
                 skip_existing,

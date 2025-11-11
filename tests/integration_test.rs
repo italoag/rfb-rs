@@ -5,12 +5,13 @@ use rfb_rs::transform::TransformConfig;
 fn test_federal_revenue_urls() {
     let urls = FederalRevenue::file_urls();
     assert_eq!(urls.len(), 37);
-    
+
     // Check that all URLs start with the correct base
     for url in &urls {
-        assert!(url.starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
+        assert!(url
+            .starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
     }
-    
+
     // Check specific file types exist
     assert!(urls.iter().any(|u| u.contains("Estabelecimentos")));
     assert!(urls.iter().any(|u| u.contains("Empresas")));

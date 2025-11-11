@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
 use lazy_static::lazy_static;
 use regex::Regex;
+use serde::{Deserialize, Serialize};
 
 lazy_static! {
     /// Regex for matching CPF pattern in MEI names: (\D)(\d{3})(\d{5})(\d{3})
@@ -78,7 +78,7 @@ impl Company {
             _ => None,
         }
     }
-    
+
     /// Clean company name for privacy (masks CPF in MEI names)
     pub fn clean_name(name: &str) -> String {
         // Replace middle digits with ***

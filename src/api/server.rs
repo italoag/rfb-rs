@@ -1,5 +1,5 @@
-use super::{ApiConfig, Result, handlers};
-use actix_web::{web, App, HttpServer, middleware};
+use super::{handlers, ApiConfig, Result};
+use actix_web::{middleware, web, App, HttpServer};
 
 /// API server
 pub struct ApiServer {
@@ -13,11 +13,15 @@ impl ApiServer {
 
     /// Start the API server
     pub async fn start(&self) -> Result<()> {
-        tracing::info!("Starting API server on {}:{}", self.config.host, self.config.port);
-        
+        tracing::info!(
+            "Starting API server on {}:{}",
+            self.config.host,
+            self.config.port
+        );
+
         let bind_addr = format!("{}:{}", self.config.host, self.config.port);
         let db_url = self.config.database_url.clone();
-        
+
         HttpServer::new(move || {
             App::new()
                 .app_data(web::Data::new(db_url.clone()))
@@ -27,7 +31,7 @@ impl ApiServer {
                     web::scope("/api")
                         .route("/health", web::get().to(handlers::health_check))
                         .route("/metrics", web::get().to(handlers::metrics))
-                        .route("/cnpj/{cnpj}", web::get().to(handlers::get_company_handler))
+                        .route("/cnpj/{cnpj}", web::get().to(handlers::get_company_handler)),
                 )
                 .route("/health", web::get().to(handlers::health_check))
                 .route("/metrics", web::get().to(handlers::metrics))
@@ -37,7 +41,7 @@ impl ApiServer {
         .run()
         .await
         .map_err(|e| super::ApiError::ServerError(e.to_string()))?;
-        
+
         Ok(())
     }
 }

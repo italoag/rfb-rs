@@ -19,7 +19,10 @@ mod tests {
 
     #[test]
     fn test_cnae_creation() {
-        let cnae = CNAE::new(4751201, "Comércio varejista de produtos de panificação".to_string());
+        let cnae = CNAE::new(
+            4751201,
+            "Comércio varejista de produtos de panificação".to_string(),
+        );
         assert_eq!(cnae.codigo, 4751201);
         assert!(cnae.descricao.contains("panificação"));
     }
