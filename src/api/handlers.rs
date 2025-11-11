@@ -27,7 +27,7 @@ pub async fn get_company_handler(
 /// Handler for getting company by CNPJ
 pub async fn get_company(cnpj: &str, db_url: &str) -> Result<Option<Company>> {
     // Validate and clean CNPJ (remove non-digits)
-    let clean_cnpj: String = cnpj.chars().filter(|c| c.is_digit(10)).collect();
+    let clean_cnpj: String = cnpj.chars().filter(|c| c.is_ascii_digit()).collect();
 
     if clean_cnpj.len() != 14 {
         return Err(super::ApiError::InvalidCnpj(cnpj.to_string()));

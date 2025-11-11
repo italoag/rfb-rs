@@ -179,22 +179,11 @@ impl Transformer {
 
                 // Simple pattern matching - check if filename contains key parts
                 let pattern_upper = pattern.to_uppercase();
-                if pattern_upper.contains("ESTABELE")
-                    && filename.to_uppercase().contains("ESTABELE")
-                {
-                    return Ok(Some(path));
-                } else if pattern_upper.contains("EMPRE")
-                    && filename.to_uppercase().contains("EMPRE")
-                {
-                    return Ok(Some(path));
-                } else if pattern_upper.contains("SOCIO")
-                    && filename.to_uppercase().contains("SOCIO")
-                {
-                    return Ok(Some(path));
-                } else if pattern_upper.contains("SIMPLES")
-                    && filename.to_uppercase().contains("SIMPLES")
-                {
-                    return Ok(Some(path));
+                let filename_upper = filename.to_uppercase();
+                for token in ["ESTABELE", "EMPRE", "SOCIO", "SIMPLES"] {
+                    if pattern_upper.contains(token) && filename_upper.contains(token) {
+                        return Ok(Some(path));
+                    }
                 }
             }
         }
@@ -238,6 +227,6 @@ mod tests {
     fn test_transformer_creation() {
         let config = TransformConfig::default();
         let transformer = Transformer::new(config);
-        assert_eq!(transformer.config.privacy_mode, false);
+        assert!(!transformer.config.privacy_mode);
     }
 }

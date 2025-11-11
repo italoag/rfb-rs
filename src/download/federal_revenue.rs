@@ -52,7 +52,7 @@ impl FederalRevenue {
 
     /// Get filename from URL
     pub fn filename_from_url(url: &str) -> Option<String> {
-        url.split('/').last().map(|s| s.to_string())
+        url.split('/').next_back().map(|s| s.to_string())
     }
 }
 
