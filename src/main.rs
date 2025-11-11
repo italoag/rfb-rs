@@ -1,5 +1,4 @@
 use clap::{Parser, Subcommand};
-use tracing_subscriber;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]

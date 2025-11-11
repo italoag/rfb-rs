@@ -3,9 +3,13 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 use tempfile::TempDir;
 
+fn cli_command() -> Command {
+    Command::new(env!("CARGO_BIN_EXE_rfb"))
+}
+
 #[test]
 fn test_cli_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("--help");
 
     cmd.assert()
@@ -18,7 +22,7 @@ fn test_cli_help() {
 
 #[test]
 fn test_cli_version() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("--version");
 
     cmd.assert()
@@ -28,7 +32,7 @@ fn test_cli_version() {
 
 #[test]
 fn test_download_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("download").arg("--help");
 
     cmd.assert()
@@ -40,7 +44,7 @@ fn test_download_command_help() {
 
 #[test]
 fn test_transform_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("transform").arg("--help");
 
     cmd.assert()
@@ -52,7 +56,7 @@ fn test_transform_command_help() {
 
 #[test]
 fn test_db_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("db").arg("--help");
 
     cmd.assert()
@@ -64,7 +68,7 @@ fn test_db_command_help() {
 
 #[test]
 fn test_api_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("api").arg("--help");
 
     cmd.assert()
@@ -76,7 +80,7 @@ fn test_api_command_help() {
 
 #[test]
 fn test_check_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("check").arg("--help");
 
     cmd.assert()
@@ -87,7 +91,7 @@ fn test_check_command_help() {
 
 #[test]
 fn test_check_nonexistent_directory() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("check").arg("--directory").arg("/nonexistent/path");
 
     cmd.assert().failure();
@@ -97,7 +101,7 @@ fn test_check_nonexistent_directory() {
 fn test_check_empty_directory() {
     let temp_dir = TempDir::new().unwrap();
 
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("check")
         .arg("--directory")
         .arg(temp_dir.path().to_str().unwrap());
@@ -109,7 +113,7 @@ fn test_check_empty_directory() {
 
 #[test]
 fn test_db_create_without_url() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("db").arg("create");
 
     // Should fail without DATABASE_URL
@@ -118,7 +122,7 @@ fn test_db_create_without_url() {
 
 #[test]
 fn test_api_invalid_port() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("api").arg("--port").arg("99999");
 
     // Port out of range should fail
@@ -129,7 +133,7 @@ fn test_api_invalid_port() {
 fn test_download_invalid_parallel() {
     let temp_dir = TempDir::new().unwrap();
 
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("download")
         .arg("--directory")
         .arg(temp_dir.path().to_str().unwrap())

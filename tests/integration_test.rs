@@ -34,7 +34,7 @@ fn test_transform_config_default() {
     let config = TransformConfig::default();
     assert_eq!(config.data_dir, "data");
     assert_eq!(config.output_dir, "output");
-    assert_eq!(config.privacy_mode, false);
+    assert!(!config.privacy_mode);
 }
 
 #[test]
@@ -46,7 +46,9 @@ fn test_filename_extraction() {
 
 #[test]
 fn test_privacy_mode_config() {
-    let mut config = TransformConfig::default();
-    config.privacy_mode = true;
-    assert_eq!(config.privacy_mode, true);
+    let config = TransformConfig {
+        privacy_mode: true,
+        ..Default::default()
+    };
+    assert!(config.privacy_mode);
 }
