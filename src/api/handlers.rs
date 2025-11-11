@@ -1,8 +1,8 @@
 use super::Result;
 use crate::transform::Company;
 use actix_web::{web, HttpResponse, Responder};
-use serde_json::json;
 use postgres::{Client, NoTls};
+use serde_json::json;
 
 /// Prometheus exposition format version
 const PROMETHEUS_CONTENT_TYPE: &str = "text/plain; version=0.0.4";
@@ -27,29 +27,31 @@ pub async fn get_company_handler(
 /// Handler for getting company by CNPJ
 pub async fn get_company(cnpj: &str, db_url: &str) -> Result<Option<Company>> {
     // Validate and clean CNPJ (remove non-digits)
-    let clean_cnpj: String = cnpj.chars().filter(|c| c.is_digit(10)).collect();
-    
+    let clean_cnpj: String = cnpj.chars().filter(|c| c.is_ascii_digit()).collect();
+
     if clean_cnpj.len() != 14 {
         return Err(super::ApiError::InvalidCnpj(cnpj.to_string()));
     }
-    
+
     tracing::info!("Getting company with CNPJ: {}", clean_cnpj);
-    
+
     // Connect to database
     let mut client = Client::connect(db_url, NoTls)
         .map_err(|e| super::ApiError::DatabaseError(e.to_string()))?;
-    
+
     // Query company
-    let row = client.query_opt(
-        "SELECT cnpj, razao_social, nome_fantasia, situacao_cadastral, 
+    let row = client
+        .query_opt(
+            "SELECT cnpj, razao_social, nome_fantasia, situacao_cadastral, 
                 descricao_situacao_cadastral, data_situacao_cadastral,
                 uf, municipio, cnae_fiscal, cnae_fiscal_descricao,
                 logradouro, numero, complemento, bairro, cep,
                 email, codigo_natureza_juridica, capital_social
          FROM companies WHERE cnpj = $1",
-        &[&clean_cnpj],
-    ).map_err(|e| super::ApiError::DatabaseError(e.to_string()))?;
-    
+            &[&clean_cnpj],
+        )
+        .map_err(|e| super::ApiError::DatabaseError(e.to_string()))?;
+
     if let Some(row) = row {
         let company = Company {
             cnpj: row.get(0),
@@ -99,7 +101,7 @@ pub async fn get_company(cnpj: &str, db_url: &str) -> Result<Option<Company>> {
             codigo_municipio: None,
             codigo_municipio_ibge: None,
         };
-        
+
         Ok(Some(company))
     } else {
         Ok(None)
@@ -127,7 +129,7 @@ pub async fn metrics() -> impl Responder {
          rfb_requests_total 0\n",
         env!("CARGO_PKG_VERSION")
     );
-    
+
     HttpResponse::Ok()
         .content_type(PROMETHEUS_CONTENT_TYPE)
         .body(metrics_text)

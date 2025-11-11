@@ -66,14 +66,14 @@ git push origin main
 ```
 
 3. **Automatic pipeline runs:**
-   - ✅ Tests on Ubuntu, macOS, Windows
-   - ✅ Security audit
-   - ✅ Build binaries for 5 platforms
-   - ✅ Build Docker images
-   - ✅ Analyze commits and determine version
-   - ✅ Generate CHANGELOG
-   - ✅ Create GitHub release
-   - ✅ Publish to crates.io
+   - Tests on Ubuntu, macOS, Windows
+   - Security audit
+   - Build binaries for 5 platforms
+   - Build Docker images
+   - Analyze commits and determine version
+   - Generate CHANGELOG
+   - Create GitHub release
+   - Publish to crates.io
 
 ## Docker Usage
 

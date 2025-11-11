@@ -1,5 +1,4 @@
 use clap::{Parser, Subcommand};
-use tracing_subscriber;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -123,7 +122,7 @@ async fn main() -> anyhow::Result<()> {
                 eprintln!("Error: parallel downloads must be at least 1");
                 std::process::exit(1);
             }
-            
+
             let config = rfb_rs::download::DownloadConfig {
                 data_dir: directory,
                 skip_existing,

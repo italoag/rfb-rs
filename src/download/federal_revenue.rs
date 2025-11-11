@@ -3,7 +3,8 @@ pub struct FederalRevenue;
 
 impl FederalRevenue {
     /// Base URL for Federal Revenue data
-    const BASE_URL: &'static str = "https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/";
+    const BASE_URL: &'static str =
+        "https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/";
 
     /// Get the current year-month directory (YYYY-MM format)
     fn get_year_month() -> String {
@@ -21,22 +22,22 @@ impl FederalRevenue {
     pub fn file_urls() -> Vec<String> {
         let base = Self::get_base_url_with_date();
         let mut urls = Vec::new();
-        
+
         // Companies files (Estabelecimentos)
         for i in 0..10 {
             urls.push(format!("{}Estabelecimentos{}.zip", base, i));
         }
-        
+
         // Companies base data (Empresas)
         for i in 0..10 {
             urls.push(format!("{}Empresas{}.zip", base, i));
         }
-        
+
         // Partners (Socios)
         for i in 0..10 {
             urls.push(format!("{}Socios{}.zip", base, i));
         }
-        
+
         // Lookup tables
         urls.push(format!("{}Cnaes.zip", base));
         urls.push(format!("{}Motivos.zip", base));
@@ -45,13 +46,13 @@ impl FederalRevenue {
         urls.push(format!("{}Paises.zip", base));
         urls.push(format!("{}Qualificacoes.zip", base));
         urls.push(format!("{}Simples.zip", base));
-        
+
         urls
     }
-    
+
     /// Get filename from URL
     pub fn filename_from_url(url: &str) -> Option<String> {
-        url.split('/').last().map(|s| s.to_string())
+        url.split('/').next_back().map(|s| s.to_string())
     }
 }
 
@@ -69,7 +70,8 @@ mod tests {
     #[test]
     fn test_base_url_format() {
         let base_url = FederalRevenue::get_base_url_with_date();
-        assert!(base_url.starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
+        assert!(base_url
+            .starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
         // Should contain YYYY-MM format
         assert!(base_url.contains("-"));
     }
@@ -96,7 +98,9 @@ mod tests {
         let urls = FederalRevenue::file_urls();
         // All URLs should use the new base URL
         for url in &urls {
-            assert!(url.starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
+            assert!(url.starts_with(
+                "https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"
+            ));
         }
     }
 }

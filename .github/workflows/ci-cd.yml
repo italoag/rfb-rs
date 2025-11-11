@@ -79,11 +79,14 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install tarpaulin
-        run: cargo install cargo-tarpaulin
+      - name: Install LLVM tools
+        run: rustup component add llvm-tools-preview
+
+      - name: Install cargo-llvm-cov
+        run: cargo install cargo-llvm-cov
 
       - name: Run coverage
-        run: cargo tarpaulin --verbose --all-features --workspace --timeout 120 --out xml
+        run: cargo llvm-cov --all-features --workspace --cobertura --output-path cobertura.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

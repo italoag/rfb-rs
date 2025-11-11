@@ -3,11 +3,15 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 use tempfile::TempDir;
 
+fn cli_command() -> Command {
+    Command::new(env!("CARGO_BIN_EXE_rfb"))
+}
+
 #[test]
 fn test_cli_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("--help");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("RFB-RS"))
@@ -18,9 +22,9 @@ fn test_cli_help() {
 
 #[test]
 fn test_cli_version() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("--version");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("rfb"));
@@ -28,9 +32,9 @@ fn test_cli_version() {
 
 #[test]
 fn test_download_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("download").arg("--help");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("Download data files"))
@@ -40,9 +44,9 @@ fn test_download_command_help() {
 
 #[test]
 fn test_transform_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("transform").arg("--help");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("Transform downloaded data"))
@@ -52,9 +56,9 @@ fn test_transform_command_help() {
 
 #[test]
 fn test_db_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("db").arg("--help");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("Database commands"))
@@ -64,9 +68,9 @@ fn test_db_command_help() {
 
 #[test]
 fn test_api_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("api").arg("--help");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("Start API server"))
@@ -76,9 +80,9 @@ fn test_api_command_help() {
 
 #[test]
 fn test_check_command_help() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("check").arg("--help");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("Check integrity"))
@@ -87,22 +91,21 @@ fn test_check_command_help() {
 
 #[test]
 fn test_check_nonexistent_directory() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("check").arg("--directory").arg("/nonexistent/path");
-    
-    cmd.assert()
-        .failure();
+
+    cmd.assert().failure();
 }
 
 #[test]
 fn test_check_empty_directory() {
     let temp_dir = TempDir::new().unwrap();
-    
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+
+    let mut cmd = cli_command();
     cmd.arg("check")
         .arg("--directory")
         .arg(temp_dir.path().to_str().unwrap());
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("Checked 0 files"));
@@ -110,18 +113,18 @@ fn test_check_empty_directory() {
 
 #[test]
 fn test_db_create_without_url() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("db").arg("create");
-    
+
     // Should fail without DATABASE_URL
     cmd.assert().failure();
 }
 
 #[test]
 fn test_api_invalid_port() {
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+    let mut cmd = cli_command();
     cmd.arg("api").arg("--port").arg("99999");
-    
+
     // Port out of range should fail
     cmd.assert().failure();
 }
@@ -129,15 +132,15 @@ fn test_api_invalid_port() {
 #[test]
 fn test_download_invalid_parallel() {
     let temp_dir = TempDir::new().unwrap();
-    
-    let mut cmd = Command::cargo_bin("rfb").unwrap();
+
+    let mut cmd = cli_command();
     cmd.arg("download")
         .arg("--directory")
         .arg(temp_dir.path().to_str().unwrap())
         .arg("--parallel")
         .arg("0")
         .timeout(std::time::Duration::from_secs(5));
-    
+
     // Parallel 0 is invalid and should fail immediately with error message
     cmd.assert()
         .failure()

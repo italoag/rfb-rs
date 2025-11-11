@@ -30,7 +30,7 @@ impl Partner {
             _ => None,
         }
     }
-    
+
     /// Parse age range description
     pub fn parse_faixa_etaria(code: i32) -> Option<&'static str> {
         match code {
@@ -54,7 +54,10 @@ mod tests {
 
     #[test]
     fn test_parse_identificador_socio() {
-        assert_eq!(Partner::parse_identificador_socio(1), Some("PESSOA JURÍDICA"));
+        assert_eq!(
+            Partner::parse_identificador_socio(1),
+            Some("PESSOA JURÍDICA")
+        );
         assert_eq!(Partner::parse_identificador_socio(2), Some("PESSOA FÍSICA"));
         assert_eq!(Partner::parse_identificador_socio(99), None);
     }

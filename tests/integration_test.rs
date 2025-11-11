@@ -5,12 +5,13 @@ use rfb_rs::transform::TransformConfig;
 fn test_federal_revenue_urls() {
     let urls = FederalRevenue::file_urls();
     assert_eq!(urls.len(), 37);
-    
+
     // Check that all URLs start with the correct base
     for url in &urls {
-        assert!(url.starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
+        assert!(url
+            .starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
     }
-    
+
     // Check specific file types exist
     assert!(urls.iter().any(|u| u.contains("Estabelecimentos")));
     assert!(urls.iter().any(|u| u.contains("Empresas")));
@@ -33,7 +34,7 @@ fn test_transform_config_default() {
     let config = TransformConfig::default();
     assert_eq!(config.data_dir, "data");
     assert_eq!(config.output_dir, "output");
-    assert_eq!(config.privacy_mode, false);
+    assert!(!config.privacy_mode);
 }
 
 #[test]
@@ -45,7 +46,9 @@ fn test_filename_extraction() {
 
 #[test]
 fn test_privacy_mode_config() {
-    let mut config = TransformConfig::default();
-    config.privacy_mode = true;
-    assert_eq!(config.privacy_mode, true);
+    let config = TransformConfig {
+        privacy_mode: true,
+        ..Default::default()
+    };
+    assert!(config.privacy_mode);
 }

@@ -1,5 +1,5 @@
-mod server;
 mod handlers;
+mod server;
 
 pub use server::ApiServer;
 
@@ -9,13 +9,13 @@ use thiserror::Error;
 pub enum ApiError {
     #[error("Database error: {0}")]
     DatabaseError(String),
-    
+
     #[error("Not found: {0}")]
     NotFound(String),
-    
+
     #[error("Invalid CNPJ: {0}")]
     InvalidCnpj(String),
-    
+
     #[error("Server error: {0}")]
     ServerError(String),
 }

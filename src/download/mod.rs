@@ -1,10 +1,10 @@
-mod federal_revenue;
-mod downloader;
 mod check;
+mod downloader;
+mod federal_revenue;
 
+pub use check::check_zip_integrity;
 pub use downloader::Downloader;
 pub use federal_revenue::FederalRevenue;
-pub use check::check_zip_integrity;
 
 use thiserror::Error;
 
@@ -12,22 +12,22 @@ use thiserror::Error;
 pub enum DownloadError {
     #[error("HTTP error: {0}")]
     HttpError(#[from] reqwest::Error),
-    
+
     #[error("IO error: {0}")]
     IoError(#[from] std::io::Error),
-    
+
     #[error("ZIP error: {0}")]
     ZipError(#[from] zip::result::ZipError),
-    
+
     #[error("File not found: {0}")]
     FileNotFound(String),
-    
+
     #[error("Download failed after {0} retries")]
     MaxRetriesExceeded(u32),
-    
+
     #[error("Invalid URL: {0}")]
     InvalidUrl(String),
-    
+
     #[error("Invalid configuration: {0}")]
     InvalidConfig(String),
 }
@@ -55,10 +55,14 @@ impl DownloadConfig {
     /// Validate the configuration
     pub fn validate(&self) -> Result<()> {
         if self.max_parallel == 0 {
-            return Err(DownloadError::InvalidConfig("max_parallel must be at least 1".to_string()));
+            return Err(DownloadError::InvalidConfig(
+                "max_parallel must be at least 1".to_string(),
+            ));
         }
         if self.max_retries == 0 {
-            return Err(DownloadError::InvalidConfig("max_retries must be at least 1".to_string()));
+            return Err(DownloadError::InvalidConfig(
+                "max_retries must be at least 1".to_string(),
+            ));
         }
         Ok(())
     }
