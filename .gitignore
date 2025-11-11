@@ -6,3 +6,4 @@
 *.zip
 *.csv
 Cargo.lock
+.envrc
