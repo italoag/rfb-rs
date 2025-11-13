@@ -8,10 +8,9 @@
 !README.md
 docs/
 examples/
-
+Cargo.lock
 # Build artifacts
 target/
-Cargo.lock
 
 # IDE
 .vscode/
