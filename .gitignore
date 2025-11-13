@@ -5,5 +5,4 @@
 /output
 *.zip
 *.csv
-Cargo.lock
 .envrc
