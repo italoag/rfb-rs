@@ -8,7 +8,7 @@
 !README.md
 docs/
 examples/
-
+Cargo.lock
 # Build artifacts
 target/
 
