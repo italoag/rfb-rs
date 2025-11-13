@@ -63,6 +63,7 @@ jobs:
         run: |
           mkdir -p coverage
           cargo llvm-cov --all-features --workspace --lcov --output-path coverage/lcov.info
+          cargo llvm-cov report --cobertura --output-path coverage/cobertura.xml
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
@@ -71,13 +72,13 @@ jobs:
           path: coverage/lcov.info
 
       - name: SonarQube Scan
-        uses:  SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >-
-            -Dsonar.coverageReportPaths=coverage/lcov.info
+            -Dsonar.coverageReportPaths=coverage/cobertura.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
