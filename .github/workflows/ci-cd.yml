@@ -378,18 +378,18 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
-  publish-crates:
-    name: Publish to crates.io
-    needs: [semantic-release]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  # publish-crates:
+  #   name: Publish to crates.io
+  #   needs: [semantic-release]
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+  #     - name: Install Rust toolchain
+  #       uses: dtolnay/rust-toolchain@stable
 
-      - name: Publish to crates.io
-        run: cargo publish --token ${{ secrets.CARGO_TOKEN }}
-        continue-on-error: true
+  #     - name: Publish to crates.io
+  #       run: cargo publish --token ${{ secrets.CARGO_TOKEN }}
+  #       continue-on-error: true
