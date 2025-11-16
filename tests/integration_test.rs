@@ -8,8 +8,11 @@ fn test_federal_revenue_urls() {
 
     // Check that all URLs start with the correct base
     for url in &urls {
-        assert!(url
-            .starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
+        assert!(
+            url.starts_with(
+                "https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"
+            )
+        );
     }
 
     // Check specific file types exist
