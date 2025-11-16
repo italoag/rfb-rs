@@ -1,5 +1,5 @@
 /// Integration tests for transform module
-use rfb_rs::transform::{Company, Lookups, Partner, TaxRegime, TransformConfig, Transformer, CNAE};
+use rfb_rs::transform::{CNAE, Company, Lookups, Partner, TaxRegime, TransformConfig, Transformer};
 use std::fs;
 use tempfile::TempDir;
 

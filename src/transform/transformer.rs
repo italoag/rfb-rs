@@ -1,7 +1,7 @@
 use super::{Lookups, Result, TransformConfig};
 use ::zip::ZipArchive;
 use polars::prelude::*;
-use std::fs::{read_dir, File};
+use std::fs::{File, read_dir};
 use std::path::{Path, PathBuf};
 
 /// Main transformer that orchestrates the transformation process
