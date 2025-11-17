@@ -17,8 +17,8 @@ fn main() {
     };
 
     // Link math library on non-Windows targets (fixes undefined reference to log10/pow)
-    // Windows doesn't have libm as a separate library (math functions are in the C runtime)
-    if !target.contains("windows") {
+    // Windows doesn't have libm (m.lib), so skip it there
+    if !target.to_lowercase().contains("windows") {
         println!("cargo:rustc-link-lib=m");
         println!("cargo:warning=Added link to libm (math)");
     } else {
@@ -65,7 +65,7 @@ fn main() {
                 "cargo:warning=No LIBRARY_PATH set; if link errors persist, set LIBRARY_PATH to musl lib dir"
             );
         }
-    } else {
+    } else if !target.to_lowercase().contains("windows") {
         println!(
             "cargo:warning=Non-musl target detected ({}); libm already linked",
             target
