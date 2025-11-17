@@ -122,7 +122,7 @@ jobs:
           ignore-unfixed: true
 
       - name: Upload filesystem SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-fs.sarif
           category: filesystem-scan
@@ -335,7 +335,7 @@ jobs:
           ignore-unfixed: true
 
       - name: Upload image SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-image.sarif
           category: container-image-scan
