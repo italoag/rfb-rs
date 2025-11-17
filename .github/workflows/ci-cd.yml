@@ -181,28 +181,47 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
+          # Linux targets
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             artifact_name: rfb
             asset_name: rfb-linux-amd64
+            use_cross: false
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            artifact_name: rfb
+            asset_name: rfb-linux-arm64
+            use_cross: true
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
             artifact_name: rfb
             asset_name: rfb-linux-amd64-musl
+            use_cross: true
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            artifact_name: rfb
+            asset_name: rfb-linux-arm64-musl
+            use_cross: true
+          # macOS targets
           - os: macos-latest
             target: x86_64-apple-darwin
             artifact_name: rfb
             asset_name: rfb-darwin-amd64
+            use_cross: false
           - os: macos-latest
             target: aarch64-apple-darwin
             artifact_name: rfb
             asset_name: rfb-darwin-arm64
+            use_cross: false
+          # Windows targets
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             artifact_name: rfb.exe
             asset_name: rfb-windows-amd64.exe
+            use_cross: false
 
     steps:
       - name: Checkout code
@@ -213,6 +232,11 @@ jobs:
         with:
           toolchain: ${{ env.RUST_VERSION }}
           targets: ${{ matrix.target }}
+
+      - name: Install cross
+        if: matrix.use_cross
+        run: |
+          cargo install cross --git https://github.com/cross-rs/cross --locked
 
       - name: Free disk space (Linux)
         if: matrix.os == 'ubuntu-latest'
@@ -225,33 +249,20 @@ jobs:
           sudo apt-get clean
           df -h
 
-      - name: Install musl tools
-        if: matrix.target == 'x86_64-unknown-linux-musl'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y musl-tools musl-dev build-essential pkg-config libunwind-dev gcc
-
-
-      - name: Configure musl toolchain
-        if: matrix.target == 'x86_64-unknown-linux-musl'
-        run: |
-          echo "CC_x86_64_unknown_linux_musl=musl-gcc" >> $GITHUB_ENV
-          echo "CXX_x86_64_unknown_linux_musl=musl-g++" >> $GITHUB_ENV
-          echo "AR_x86_64_unknown_linux_musl=ar" >> $GITHUB_ENV
-          echo "CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=musl-gcc" >> $GITHUB_ENV
-          echo "LIBRARY_PATH=/usr/lib/x86_64-linux-musl" >> $GITHUB_ENV
-          echo "PKG_CONFIG_ALLOW_CROSS=1" >> $GITHUB_ENV
-          echo "CFLAGS_x86_64_unknown_linux_musl=-fPIC -fPIE" >> $GITHUB_ENV
-          echo "CXXFLAGS_x86_64_unknown_linux_musl=-fPIC -fPIE" >> $GITHUB_ENV
-          echo "LDFLAGS=-pie" >> $GITHUB_ENV
-          echo "RUSTFLAGS=-C target-feature=+crt-static -Clink-self-contained=yes -C relocation-model=pic -C link-arg=-fPIE" >> $GITHUB_ENV
-
-      - name: Build release binary
+      - name: Build release binary (native)
+        if: "!matrix.use_cross"
         run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Build release binary (cross)
+        if: matrix.use_cross
+        run: cross build --release --target ${{ matrix.target }}
 
       - name: Strip binary (Linux/macOS)
         if: matrix.os != 'windows-latest'
-        run: strip target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+        run: |
+          if command -v strip &> /dev/null; then
+            strip target/${{ matrix.target }}/release/${{ matrix.artifact_name }} || true
+          fi
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
