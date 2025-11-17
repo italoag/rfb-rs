@@ -1,8 +1,8 @@
 use super::{DownloadConfig, FederalRevenue, Result};
 use futures::stream::{self, StreamExt};
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
-use reqwest::{header, Client};
-use std::fs::{create_dir_all, File};
+use reqwest::{Client, header};
+use std::fs::{File, create_dir_all};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::time::Duration;

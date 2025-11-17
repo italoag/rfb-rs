@@ -1,7 +1,7 @@
 use super::{Lookups, Result, TransformConfig};
 use ::zip::ZipArchive;
 use polars::prelude::*;
-use std::fs::{read_dir, File};
+use std::fs::{File, read_dir};
 use std::path::{Path, PathBuf};
 
 /// Main transformer that orchestrates the transformation process
@@ -205,10 +205,10 @@ impl Transformer {
             if file.name().ends_with('/') {
                 std::fs::create_dir_all(&outpath)?;
             } else {
-                if let Some(p) = std::path::Path::new(&outpath).parent() {
-                    if !p.exists() {
-                        std::fs::create_dir_all(p)?;
-                    }
+                if let Some(p) = std::path::Path::new(&outpath).parent()
+                    && !p.exists()
+                {
+                    std::fs::create_dir_all(p)?;
                 }
                 let mut outfile = File::create(&outpath)?;
                 copy(&mut file, &mut outfile)?;

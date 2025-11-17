@@ -1,5 +1,5 @@
 /// Integration tests for download module
-use rfb_rs::download::{check_zip_integrity, DownloadConfig, Downloader, FederalRevenue};
+use rfb_rs::download::{DownloadConfig, Downloader, FederalRevenue, check_zip_integrity};
 use tempfile::TempDir;
 
 #[tokio::test]

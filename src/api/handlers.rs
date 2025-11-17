@@ -1,6 +1,6 @@
 use super::Result;
 use crate::transform::Company;
-use actix_web::{web, HttpResponse, Responder};
+use actix_web::{HttpResponse, Responder, web};
 use postgres::{Client, NoTls};
 use serde_json::json;
 

@@ -1,5 +1,5 @@
-use super::{handlers, ApiConfig, Result};
-use actix_web::{middleware, web, App, HttpServer};
+use super::{ApiConfig, Result, handlers};
+use actix_web::{App, HttpServer, middleware, web};
 
 /// API server
 pub struct ApiServer {

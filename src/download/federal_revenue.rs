@@ -70,8 +70,11 @@ mod tests {
     #[test]
     fn test_base_url_format() {
         let base_url = FederalRevenue::get_base_url_with_date();
-        assert!(base_url
-            .starts_with("https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"));
+        assert!(
+            base_url.starts_with(
+                "https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/"
+            )
+        );
         // Should contain YYYY-MM format
         assert!(base_url.contains("-"));
     }
