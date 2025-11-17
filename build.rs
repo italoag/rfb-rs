@@ -13,7 +13,13 @@ fn main() {
 
     let target = match env::var("TARGET") {
         Ok(t) => t,
-        Err(_) => return,
+let target = match env::var("TARGET") {
+    Ok(t) => t,
+    Err(e) => {
+        println!("cargo:warning=Failed to get TARGET: {}", e);
+        return;
+    }
+};
     };
 
     // Link math library on non-Windows targets (fixes undefined reference to log10/pow)
