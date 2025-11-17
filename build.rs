@@ -65,7 +65,7 @@ fn main() {
                 "cargo:warning=No LIBRARY_PATH set; if link errors persist, set LIBRARY_PATH to musl lib dir"
             );
         }
-    } else if !target.contains("windows") {
+    } else if !target.to_lowercase().contains("windows") {
         println!(
             "cargo:warning=Non-musl target detected ({}); libm already linked",
             target
