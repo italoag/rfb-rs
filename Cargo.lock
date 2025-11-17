@@ -3513,6 +3513,7 @@ dependencies = [
  "itertools",
  "lazy_static",
  "percent-encoding",
+ "pkg-config",
  "polars",
  "postgres",
  "predicates",
