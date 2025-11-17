@@ -13,18 +13,12 @@ fn main() {
 
     let target = match env::var("TARGET") {
         Ok(t) => t,
-let target = match env::var("TARGET") {
-    Ok(t) => t,
-    Err(e) => {
-        println!("cargo:warning=Failed to get TARGET: {}", e);
-        return;
-    }
-};
+        Err(_) => return,
     };
 
     // Link math library on non-Windows targets (fixes undefined reference to log10/pow)
     // Windows doesn't have libm (m.lib), so skip it there
-    if !target.contains("windows") {
+    if !target.to_lowercase().contains("windows") {
         println!("cargo:rustc-link-lib=m");
         println!("cargo:warning=Added link to libm (math)");
     } else {
@@ -68,12 +62,13 @@ let target = match env::var("TARGET") {
             println!("cargo:warning=LIBRARY_PATH={}", libpath);
         } else {
             println!(
-} else if !target.contains("windows") {
-    println!(
-        "cargo:warning=Non-musl target detected ({}); libm linking handled per platform",
-        target
-    );
-}
+                "cargo:warning=No LIBRARY_PATH set; if link errors persist, set LIBRARY_PATH to musl lib dir"
+            );
+        }
+    } else if !target.to_lowercase().contains("windows") {
+        println!(
+            "cargo:warning=Non-musl target detected ({}); libm already linked",
+            target
         );
     }
 }
