@@ -2,7 +2,7 @@
 name = "rfb-rs"
 version = "0.1.0"
 edition = "2024"
-authors = ["Italo A. G. <italoamorim@gmail.com"]
+authors = ["Italo A. G. <italoamorim@gmail.com>"]
 homepage = "https://github.com/italoag/rfb-rs"
 description="rfb-rs - ETL - Receita Federal Brasileira in Rust 🦀"
 license = "MIT"

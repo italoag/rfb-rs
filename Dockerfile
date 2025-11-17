@@ -1,5 +1,6 @@
 # Multi-stage build pinned to Rust 1.91 for edition 2024 support
 ARG RUST_VERSION=1.91.0
+ARG ALPINE_VERSION=3.20
 FROM rust:${RUST_VERSION}-alpine3.20 AS builder
 
 # Install build dependencies
@@ -32,7 +33,6 @@ RUN touch src/main.rs src/lib.rs && \
     cargo build --release
 
 # Runtime stage stays on the same Alpine track for parity with builder tooling
-ARG ALPINE_VERSION=3.20
 FROM alpine:${ALPINE_VERSION}
 
 # Install runtime dependencies
