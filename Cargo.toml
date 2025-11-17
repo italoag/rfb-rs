@@ -88,6 +88,9 @@ codegen-units = 1
 lto = true
 opt-level = 'z'
 
+[build-dependencies]
+pkg-config = "0.3"
+
 [dev-dependencies]
 assert_cmd = "2"
 predicates = "3"
