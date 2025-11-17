@@ -22,7 +22,7 @@ fn main() {
         println!("cargo:rustc-link-lib=m");
         println!("cargo:warning=Added link to libm (math)");
     } else {
-        println!("cargo:warning=Skipping libm link on Windows (not needed)");
+        println!("cargo:warning=Skipping libm link on Windows (math is in C runtime)");
     }
 
     if target.contains("musl") {
