@@ -16,9 +16,14 @@ fn main() {
         Err(_) => return,
     };
 
-    // Always link math library (fixes undefined reference to log10/pow)
-    println!("cargo:rustc-link-lib=m");
-    println!("cargo:warning=Added link to libm (math)");
+    // Link math library on non-Windows targets (fixes undefined reference to log10/pow)
+    // Windows doesn't have libm as a separate library (math functions are in the C runtime)
+    if !target.contains("windows") {
+        println!("cargo:rustc-link-lib=m");
+        println!("cargo:warning=Added link to libm (math)");
+    } else {
+        println!("cargo:warning=Skipping libm link on Windows (math is in C runtime)");
+    }
 
     if target.contains("musl") {
         // Try to use pkg-config to find libunwind if available
