@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: rfb-postgres
+    environment:
+      POSTGRES_DB: rfb
+      POSTGRES_USER: rfb
+      # WARNING: Development credentials only - use environment variables or secrets in production
+      POSTGRES_PASSWORD: rfb_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rfb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rfb-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rfb-api
+    environment:
+      # WARNING: Development credentials only - use environment variables or secrets in production
+      DATABASE_URL: postgres://rfb:rfb_password@postgres:5432/rfb
+      POSTGRES_SCHEMA: public
+      RUST_LOG: info
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data:ro
+      - ./output:/app/output
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["rfb", "api", "--host", "0.0.0.0", "--port", "8080"]
+
+  rfb-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rfb-init
+    environment:
+      # WARNING: Development credentials only - use environment variables or secrets in production
+      DATABASE_URL: postgres://rfb:rfb_password@postgres:5432/rfb
+      POSTGRES_SCHEMA: public
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["rfb", "db", "create"]
+    restart: "no"
+
+volumes:
+  postgres_data:

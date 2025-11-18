@@ -1,0 +1,8 @@
+# Cargo configuration for cross-compilation
+# The cross-rs tool manages linker and rustflags automatically via Docker containers
+# No manual configuration needed for musl targets when using cross
+
+# Uncomment below only if building natively (not with cross-rs)
+# [target.x86_64-unknown-linux-musl]
+# linker = "musl-gcc"
+# rustflags = ["-C", "target-feature=+crt-static"]

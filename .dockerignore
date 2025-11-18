@@ -1,0 +1,37 @@
+# Git
+.git/
+.gitignore
+.github/
+
+# Documentation
+*.md
+!README.md
+docs/
+examples/
+# Build artifacts
+target/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data files
+data/
+output/
+*.zip
+*.csv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+coverage/
+*.profraw
+
+# Temporary files
+tmp/
+temp/
