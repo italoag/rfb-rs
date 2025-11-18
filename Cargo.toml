@@ -88,8 +88,7 @@ codegen-units = 1
 lto = true
 opt-level = 'z'
 
-[build-dependencies]
-pkg-config = "0.3"
+# No build dependencies needed anymore
 
 [dev-dependencies]
 assert_cmd = "2"
