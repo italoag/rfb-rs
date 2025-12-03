@@ -266,14 +266,36 @@ cargo outdated
 
 ### Benchmarking
 
+Para código crítico de performance, utilize a crate `criterion` que é estável e recomendada para benchmarks em Rust:
+
+```toml
+# Adicionar ao Cargo.toml em [dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "transform_benchmark"
+harness = false
+```
+
 ```rust
-// Para código crítico de performance
-#[bench]
-fn bench_transform_company(b: &mut Bencher) {
-    b.iter(|| {
-        transform_company(&test_data)
+// benches/transform_benchmark.rs
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
+
+fn bench_transform_company(c: &mut Criterion) {
+    let test_data = setup_test_data();
+    
+    c.bench_function("transform_company", |b| {
+        b.iter(|| transform_company(black_box(&test_data)))
     });
 }
+
+criterion_group!(benches, bench_transform_company);
+criterion_main!(benches);
+```
+
+```bash
+# Executar benchmarks
+cargo bench
 ```
 
 ---
@@ -485,7 +507,9 @@ rustup default stable
 rustup component add rustfmt clippy
 
 # Ferramentas de desenvolvimento
-cargo install cargo-audit cargo-outdated cargo-llvm-cov
+cargo install cargo-audit    # Auditoria de vulnerabilidades em dependências
+cargo install cargo-outdated # Verificação de dependências desatualizadas
+cargo install cargo-llvm-cov # Cobertura de código com LLVM (usado pelo CI para métricas de coverage)
 
 # Para testes com banco de dados
 docker run -d -p 5432:5432 \
@@ -493,6 +517,19 @@ docker run -d -p 5432:5432 \
   -e POSTGRES_USER=rfb \
   -e POSTGRES_PASSWORD=rfb \
   postgres:15-alpine
+```
+
+### Cobertura de Código
+
+```bash
+# Gerar relatório de cobertura local
+cargo llvm-cov --all-features --workspace --lcov --output-path coverage/lcov.info
+
+# Ver cobertura no terminal
+cargo llvm-cov --all-features
+
+# Gerar relatório HTML
+cargo llvm-cov --html
 ```
 
 ### Variáveis de Ambiente
