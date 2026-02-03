@@ -58,7 +58,7 @@ chrono = { version = "0.4", features = ["serde"] }
 clap = { version = "4.0", features = ["derive", "cargo"] }
 toml = "0.9"
 percent-encoding = "2"
-bytes = "1.11.0"
+bytes = "1.11.1"
 serde = { version = "1.0", features = ["derive"] }
 dirs = "6.0"
 zip = "6.0"
