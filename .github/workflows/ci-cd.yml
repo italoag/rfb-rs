@@ -113,7 +113,7 @@ jobs:
 
       - name: Trivy filesystem scan
         id: trivy-fs
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@0.34.0
         with:
           scan-type: fs
           scan-ref: .
@@ -344,7 +344,7 @@ jobs:
 
       - name: Trivy vulnerability scanner
         id: trivy-image
-        uses: aquasecurity/trivy-action@0.33.0
+        uses: aquasecurity/trivy-action@0.34.0
         with:
           image-ref: ${{ needs.build-docker.outputs.image-ref }}@${{ needs.build-docker.outputs.image-digest }}
           format: sarif
